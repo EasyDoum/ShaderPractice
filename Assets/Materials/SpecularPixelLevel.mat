@@ -6,8 +6,8 @@ Material:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: SpecularVertexLevel
-  m_Shader: {fileID: 4800000, guid: f9d14f4a8a43b13458beccba6e9a5c0a, type: 3}
+  m_Name: SpecularPixelLevel
+  m_Shader: {fileID: 4800000, guid: 9cfd65bb1a198224a9665525341acf4b, type: 3}
   m_ShaderKeywords: 
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
@@ -25,5 +25,5 @@ Material:
     m_Floats:
     - _Gloss: 20
     m_Colors:
-    - _Diffuse: {r: 0.22499995, g: 0.75, b: 0.09375, a: 1}
+    - _Diffuse: {r: 0.22352941, g: 0.7490196, b: 0.09411765, a: 1}
     - _Specular: {r: 0.22352941, g: 0.7490196, b: 0.09411765, a: 1}
