@@ -47,8 +47,10 @@ Shader "My Shader/BlinnPhongLevel"
 			{
 				v2f o;
 				o.pos = UnityObjectToClipPos(v.vertex);//裁剪后顶点信息
-				o.worldNormal = mul(v.normal,(float3x3)unity_WorldToObject);//世界法线转换
+				//o.worldNormal = mul(v.normal,(float3x3)unity_WorldToObject);//世界法线转换
+				o.worldNormal = UnityObjectToWorldNormal(v.normal);//使用unity内置函数进行转换
                 o.worldPos = mul(unity_ObjectToWorld,v.vertex);//世界顶点转换
+				
 
 				return o;
 			}
@@ -58,9 +60,11 @@ Shader "My Shader/BlinnPhongLevel"
 			{
 				fixed3 ambient = UNITY_LIGHTMODEL_AMBIENT.xyz;//获取环境光
 				fixed3 worldNormal = normalize(i.worldNormal);//获取法线
-				fixed3 worldLight = normalize(_WorldSpaceLightPos0.xyz);//获取光照
+				//fixed3 worldLight = normalize(_WorldSpaceLightPos0.xyz);//获取光照
+                fixed3 worldLight = normalize(UnityWorldSpaceLightDir(i.worldPos));//使用unity内置函数获取光照
 				fixed3 diffuse = _LightColor0.rgb * _Diffuse.rgb * saturate(dot(worldNormal,worldLight));//计算漫反射
-				fixed3 viewDir = normalize(_WorldSpaceCameraPos.xyz - i.worldPos.xyz);//获取视线方向
+				//fixed3 viewDir = normalize(_WorldSpaceCameraPos.xyz - i.worldPos.xyz);//获取视线方向
+				fixed3 viewDir = normalize(UnityWorldSpaceViewDir(i.worldPos));//使用unity内置函数获取视线方向
 				fixed3 halfDir = normalize(worldLight + viewDir);//获取h
 				fixed3 specular = _LightColor0.rgb * _Specular.rgb * pow(saturate(dot(halfDir,worldNormal)),_Gloss);//计算高光
 				fixed3 color;
