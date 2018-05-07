@@ -7,16 +7,16 @@ Shader "My Shader/NormalMapWorldSpace"
 		_Color("Color Tint",Color) = (1,1,1,1)//漫反射颜色
         _Specular("Specular",Color) = (1,1,1,1)//高光颜色
 		_Gloss("Gloss",Range(8.0,256)) = 20  //高光区域大小
-		_MainTex("Main Tex",2D) = "white" { }  //漫反射贴图
-		_BumpNormal("Bump Normal",2D) = "bump" { }//法线贴图
-		_BumpScale("Bump Scale",float) = 1.0   //法线凹凸程度
+		_MainTex("Main Tex",2D) = "white" {}  //漫反射贴图
+		_BumpMap("Bump Map",2D) = "bump" {}//法线贴图
+		_BumpScale("Bump Scale",Float) = 1.0   //法线凹凸程度
 	}
 
 	SubShader
 	{
 		Pass 
 		{
-			Tags { "LightModel" = "BaseForward"}  //前向渲染
+			Tags { "LightMode" = "ForwardBase" }  //前向渲染
 
 			CGPROGRAM
 
@@ -26,7 +26,7 @@ Shader "My Shader/NormalMapWorldSpace"
 
 			//包含文件
 			#include "Lighting.cginc"
-			#include "UnityCG.cginc"
+			//#include "UnityCG.cginc"
 
 			//定义属性
 			fixed4 _Color;
@@ -34,8 +34,8 @@ Shader "My Shader/NormalMapWorldSpace"
 			float _Gloss;
 			sampler2D _MainTex;
 			float4 _MainTex_ST;
-			sampler2D _BumpNormal;
-			float4 _BumpNormal_ST;
+			sampler2D _BumpMap;
+			float4 _BumpMap_ST;
 			float _BumpScale;
 
 			struct a2v
@@ -61,7 +61,7 @@ Shader "My Shader/NormalMapWorldSpace"
 				v2f o;
 				o.pos = UnityObjectToClipPos(v.vertex);//裁剪顶点
 				o.uv.xy = v.texcoord.xy * _MainTex_ST.xy + _MainTex_ST.zw;//漫反射贴图
-				o.uv.zw = v.texcoord.zw * _BumpNormal_ST.xy + _BumpNormal_ST.zw;//法线贴图
+				o.uv.zw = v.texcoord.xy * _BumpMap_ST.xy + _BumpMap_ST.zw;//法线贴图
 				
 				float3 worldPos = mul(unity_ObjectToWorld,v.vertex).xyz; //世界顶点
 				fixed3 worldNormal = UnityObjectToWorldNormal(v.normal);//世界法线
@@ -76,13 +76,13 @@ Shader "My Shader/NormalMapWorldSpace"
 			}
 
 			//片元着色器
-			fixed4 frag(v2f i) : SV_TARGET
+			fixed4 frag(v2f i) : SV_Target
 			{
 				float3 worldPos = float3(i.T2W0.w,i.T2W1.w,i.T2W2.w);//顶点信息
 				fixed3 lightDir = normalize(UnityWorldSpaceLightDir(worldPos));//入射光方向
 				fixed3 viewDir = normalize(UnityWorldSpaceViewDir(worldPos));//视角方向
 
-				fixed3 bump = UnpackNormal(tex2D(_BumpNormal,i.uv.zw));//uv法线采样
+				fixed3 bump = UnpackNormal(tex2D(_BumpMap,i.uv.zw));//uv法线采样
 				bump.xy *= _BumpScale;
 				bump.z = sqrt(1.0 - saturate(dot(bump.xy,bump.xy)));
 				bump = normalize(half3(dot(i.T2W0.xyz,bump),dot(i.T2W1.xyz,bump),dot(i.T2W2.xyz,bump)));//切线空间转世界空间
@@ -90,7 +90,7 @@ Shader "My Shader/NormalMapWorldSpace"
 				fixed3 albedo = tex2D(_MainTex,i.uv).rgb * _Color.rgb;
 				fixed3 ambient = UNITY_LIGHTMODEL_AMBIENT.xyz * albedo;//获取环境光
 
-				fixed3 diffuse = _LightColor0.rgb * albedo * max(0,dot(lightDir,bump));//计算漫反射
+				fixed3 diffuse = _LightColor0.rgb * albedo * max(0,dot(bump,lightDir));//计算漫反射
 				
 				fixed3 halfDir = normalize(lightDir + viewDir);//h
                 fixed3 specular = _LightColor0.rgb * _Specular.rgb * pow(max(0,dot(bump,halfDir)),_Gloss);//计算高光

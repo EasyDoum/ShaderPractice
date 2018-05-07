@@ -55,8 +55,8 @@ Shader "My Shader/SingleTexture"
 				o.pos = UnityObjectToClipPos(v.vertex);//裁剪后顶点
 				o.worldNormal = UnityObjectToWorldNormal(v.normal);//世界法线转换
 				o.worldPos = mul(unity_ObjectToWorld,v.vertex);    //世界顶点转换
-				//o.uv = v.texcoord.xy * _MainTex_ST.xy + _Maintex_ST.zw;//uv信息
-				o.uv = TRANSFORM_TEX(v.vertex,_MainTex);//使用unity内置函数获取uv信息
+				//o.uv = v.texcoord.xy * _MainTex_ST.xy + _MainTex_ST.zw;//uv信息
+				o.uv = TRANSFORM_TEX(v.texcoord,_MainTex);//使用unity内置函数获取uv信息
 
 				return o;
 			}

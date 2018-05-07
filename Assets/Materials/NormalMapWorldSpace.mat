@@ -18,8 +18,12 @@ Material:
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
+    - _BumpMap:
+        m_Texture: {fileID: 2800000, guid: cfa4a5cb4bb0fff48bebfcfe66ac5eb3, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _BumpNormal:
-        m_Texture: {fileID: 2800000, guid: d41ffb57e7822f34591875c2f8bc5768, type: 3}
+        m_Texture: {fileID: 2800000, guid: cfa4a5cb4bb0fff48bebfcfe66ac5eb3, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTex:
@@ -27,7 +31,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Floats:
-    - _BumpScale: 1.16
+    - _BumpScale: -0.8
     - _Gloss: 20
     m_Colors:
     - _Color: {r: 1, g: 1, b: 1, a: 1}

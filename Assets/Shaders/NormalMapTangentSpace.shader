@@ -59,7 +59,7 @@
 				v2f o;
 				o.pos = UnityObjectToClipPos(v.vertex);//裁剪顶点
 				o.uv.xy = v.texcoord.xy * _MainTex_ST.xy + _MainTex_ST.zw;//漫反射贴图信息
-				o.uv.zw = v.texcoord.zw * _BumpMap_ST.xy + _BumpMap_ST.zw;//法线贴图信息
+				o.uv.zw = v.texcoord.xy * _BumpMap_ST.xy + _BumpMap_ST.zw;//法线贴图信息
 				//float3 binormal = cross(normalize(v.normal),normalize(v.tangent.xyz))+v.tangent.w;//获取副切线
 				//float3x3 rotation = float3x3(v.tangent.xyz,binormal,v.normal);//切线空间矩阵
 				TANGENT_SPACE_ROTATION;                              //使用unity内置宏得到切线空间矩阵
